@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <link rel="stylesheet" href="index.css">
+  <title>Your game memo</title>
+  <body>
+      <div id="toptab">
+        <img src="src/gamepad.png" width="100px" height="100px" id="gamepad">
+        <div class="btn-wrapper">
+          <button type="button" class="btn regis">Register</button>
+          <button type="button" class="btn login">Login</button>
+        </div>
+      </div>
+      <br><br>
+      <div class="mainpanel">
+          <div class="d">
+            <img src="src/search.png" width="70px" height="70px" alt="">
+            <br>
+            <div class="panel">
+              <br><div class="box">
+                <p id="name" class="label">Name</p><br><br><br>
+                <input type="text" name="" value="Enter a name " class="input" id="name_input">
+              </div>
+              <br><div class="box">
+                <p id="platform" class="label">Platform</p><br><br><br>
+                <select class="input" id="p_select">
+                  <option value="">PC-Steam</option>
+                  <option value="">PC-Origin</option>
+                  <option value="">PC-Battlenet</option>
+                  <option value="">PC-Other</option>
+                  <option value="">PS4</option>
+                  <option value="">XBOX ONE</option>
+                </select>
+              </div>
+              <br><div class="box">
+                <p id="Type" class="label">Type</p><br><br><br>
+                <select class="input" id="type_select">
+                  <option value="">Action</option>
+                  <option value="">Shooter</option>
+                  <option value="">Platform</option>
+                  <option value="">Fighting</option>
+                  <option value="">Survival</option>
+                  <option value="">Adventure</option>
+                  <option value="">RPG</option>
+                  <option value="">MMORPG</option>
+                  <option value="">MOBA</option>
+                  <option value="">Sports</option>
+                  <option value="">Simulation</option>
+                  <option value="">Strategy</option>
+                </select>
+              </div>
+              <br><div class="box" >
+                <p id="price" class="label">Price</p><br><br><br>
+                <input id="pinput"type="text" name="" value="ENTER HIGHEST PRICE (US$) " class="input">
+              </div>
+              <br><div class="box">
+                <p id="year" class="label">Released Year</p><br><br><br>
+                <input type="text" name="" value="Enter Released Year" class="input" id="r_year">
+                <br> <select class="input2" id="year_select">
+                    <option value="">At</option>
+                    <option value="">Before</option>
+                    <option value="">Since</option>
+
+                  </select>
+              </div>
+              <br><div id="search" >
+                <button type="button" class="btn" id="search-btn" name="button">Search now</button>
+              </div>
+            </div>
+          </div>
+          <div class="d d2">
+            <img src="src/eye.png" width="70px" height="70px" alt="">
+            <br>
+            <div class="panel" id="panel2">
+
+            </div>
+          </div>
+          <div class="d d2">
+            <img src="src/pin.png" width="70px" height="70px" alt="">
+
+            <div class="panel" id="panel2">
+              <br>
+            </div>
+          </div>
+      </div>
+      <script src="jquery.js"></script>
+      <script type="text/javascript">
+      var name, platform, type, price, year, yearOption;
+      $(document).ready(function(){
+          $("#search-btn").click(function(){
+                name = $("#name_input").val();
+                platform = $('#p_select :selected').text();
+                type = $('#type_select :selected').text();
+                price = $("#pinput").val();
+                year = $("#r_year").val();
+                yearOption = $('#year_select :selected').text();
+                sendData();
+          });
+      });
+
+      function sendData() {
+        $.ajax({
+          type: 'GET',
+          url: 'index.php',
+          data: { 'sname': name, 'splatform': platform, 'stype': type, 'sprice': price, 'syear': year, 'syearOption': yearOption },
+          success: function(response) {
+            console.log('Success');
+            alert(response);
+    }
+});
+      }
+      </script>
+  </body>
+</html>
