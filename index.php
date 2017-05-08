@@ -1,16 +1,22 @@
 <?php
 
-$result = $_GET;
+$db = mysqli_connect('localhost', 'root', '', 'Game-Searcher') or
+  die('Error connecting to dababase');
 
-$name = $result['sname'];
-$platform = $result['splatform'];
-$type = $result['stype'];
-$price = $result['sprice'];
-$year = $result['syear'];
-$yearOption = $result['syearOption'];
+if(!empty($_GET)) {
 
-$return = ['name'=>$name];
+  $result = $_GET;
 
-echo json_encode($return);
+  $name = $result['sname'];
+  $platform = $result['splatform'];
+  $type = $result['stype'];
+  $price = $result['sprice'];
+  $year = $result['syear'];
+  $yearOption = $result['syearOption'];
+
+  $return = ['name'=>$name];
+
+  echo json_encode($return);
+}
 
 ?>

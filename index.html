@@ -71,14 +71,14 @@
           <div class="d d2">
             <img src="src/eye.png" width="70px" height="70px" alt="">
             <br>
-            <div class="panel" id="panel2">
+            <div class="panel panel2" id="panel2">
 
             </div>
           </div>
           <div class="d d2">
             <img src="src/pin.png" width="70px" height="70px" alt="">
 
-            <div class="panel" id="panel2">
+            <div class="panel panel2" id="panel3">
               <br>
             </div>
           </div>
@@ -88,26 +88,42 @@
       var name, platform, type, price, year, yearOption;
       $(document).ready(function(){
           $("#search-btn").click(function(){
-                name = $("#name_input").val();
-                platform = $('#p_select :selected').text();
-                type = $('#type_select :selected').text();
-                price = $("#pinput").val();
-                year = $("#r_year").val();
-                yearOption = $('#year_select :selected').text();
-                sendData();
+                getValue();
+                if (validValue())
+                  sendData();
+                else
+                  alert("Invalid value");
           });
       });
+
+      function validValue() {
+          if (price == parseInt(price, 10) && year == parseInt(year, 10))
+            return true;
+          else
+            return false;
+      }
+
+      function getValue() {
+        name = $("#name_input").val();
+        platform = $('#p_select :selected').text();
+        type = $('#type_select :selected').text();
+        price = $("#pinput").val();
+        year = $("#r_year").val();
+        yearOption = $('#year_select :selected').text();
+      }
 
       function sendData() {
         $.ajax({
           type: 'GET',
           url: 'index.php',
-          data: { 'sname': name, 'splatform': platform, 'stype': type, 'sprice': price, 'syear': year, 'syearOption': yearOption },
+          data: { 'sname': name, 'splatform': platform,
+          'stype': type, 'sprice': price,'syear': year,
+          'syearOption': yearOption },
           success: function(response) {
             console.log('Success');
             alert(response);
-    }
-});
+          }
+        });
       }
       </script>
   </body>
