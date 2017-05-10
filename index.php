@@ -2,10 +2,11 @@
 
 $db = mysqli_connect('localhost', 'root', '', 'Game-Searcher') or
   die('Error connecting to dababase');
+mysqli_set_charset($db, "utf8");
 
-if(!empty($_GET)) {
+if(!empty($_POST)) {
 
-  $result = $_GET;
+  $result = $_POST;
 
   $name = $result['sname'];
   $platform = $result['splatform'];
@@ -13,10 +14,16 @@ if(!empty($_GET)) {
   $price = $result['sprice'];
   $year = $result['syear'];
   $yearOption = $result['syearOption'];
+  $query = "SELECT * FROM Game WHERE rated like \"18%\"";
+  $answer = mysqli_query($db, $query);
+  $table = array();
+  while ($row = mysqli_fetch_assoc($answer)) {
+    $table[] = $row;
 
-  $return = ['name'=>$name];
+  }
 
-  echo json_encode($return);
+echo json_encode($table);
 }
+mysqli_close($db);
 
 ?>

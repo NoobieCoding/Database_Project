@@ -79,6 +79,9 @@
             <img src="src/pin.png" width="70px" height="70px" alt="">
 
             <div class="panel panel2" id="panel3">
+              <div class="welcome_message">
+                <label >You are not logged in</label>
+              </div>
               <br>
             </div>
           </div>
@@ -86,6 +89,7 @@
       <script src="jquery.js"></script>
       <script type="text/javascript">
       var name, platform, type, price, year, yearOption;
+      var isLoggedIn = false;
       $(document).ready(function(){
           $("#search-btn").click(function(){
                 getValue();
@@ -97,6 +101,7 @@
       });
 
       function validValue() {
+        return true //debug
           if (price == parseInt(price, 10) && year == parseInt(year, 10))
             return true;
           else
@@ -114,16 +119,31 @@
 
       function sendData() {
         $.ajax({
-          type: 'GET',
+          type: 'POST',
           url: 'index.php',
           data: { 'sname': name, 'splatform': platform,
           'stype': type, 'sprice': price,'syear': year,
           'syearOption': yearOption },
           success: function(response) {
-            console.log('Success');
-            alert(response);
+            console.log('success');
+            if (response != "[]")
+              renderHTML(response);
+            else
+              console.log('No match found');
+
           }
         });
+      }
+
+      function renderHTML(response) {
+
+        var html="";
+        var data = JSON.parse(response);
+        for (var i = 0; i < data.length; i++) {
+          var row = data[i];
+          html = html + "<div class=\"items\"><label id=\"name_label\">" + row.name + "</label><lebel id=\"rating\">" + row.rated + "</lebel><br></div>";
+        }
+        $("#panel2").html(html);
       }
       </script>
   </body>
