@@ -103,5 +103,21 @@ body {
   height: 150px;
   margin-top: 30px;
   margin-bottom:  30px;
+  text-align: left;
 
+}
+
+#name_label {
+  font-size: 30px;
+}
+
+.rate {
+  text-align: right;
+  padding-left: 50px;
+  padding-right: 15px;
+  padding-bottom: 50px;
+}
+
+#rating {
+  font-size: 32px;
 }
