@@ -7,7 +7,8 @@ if(!empty($_POST)) {
 
   $username = $_POST['susername'];
   $password = $_POST['spassword'];
-  $query = "SELECT userID, username FROM User WHERE username='$username' AND password='$password'";
+  $query = "SELECT  User.userID as uID, username,Game.name as gName  FROM User LEFT JOIN Wishlist ON  User.userID = Wishlist.userID LEFT JOIN Game ON Wishlist.gameID = Game.gameID
+  WHERE username='$username' AND password='$password' ";
   $answer = mysqli_query($db, $query);
   $table = array();
 

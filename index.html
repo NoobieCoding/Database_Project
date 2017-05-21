@@ -7,7 +7,7 @@
       <div id="toptab">
         <img src="src/gamepad.png" width="100px" height="100px" id="gamepad">
         <div class="btn-wrapper">
-          <button type="button" class="btn regis">Register</button>
+          <button type="button" class="btn regis" onclick="location.href='register.html'">Register</button>
           <button type="button" id="login" class="btn login">Login</button>
         </div>
       </div>
@@ -19,17 +19,17 @@
             <div class="panel">
               <br><div class="box">
                 <p id="name" class="label">Name</p><br><br><br>
-                <input type="text" name="" value="Enter a name " class="input" id="name_input">
+                <input type="text" class="input" id="name_input">
               </div>
               <br><div class="box">
                 <p id="platform" class="label">Platform</p><br><br><br>
                 <select class="input" id="p_select">
-                  <option value="">PC-Steam</option>
-                  <option value="">PC-Origin</option>
-                  <option value="">PC-Battlenet</option>
+                  <option value="">PC - Steam</option>
+                  <option value="">PC - Origin</option>
+                  <option value="">PC - Battle.net</option>
                   <option value="">PC-Other</option>
-                  <option value="">PS4</option>
-                  <option value="">XBOX ONE</option>
+                  <option value="">PlayStation 4</option>
+                  <option value="">XBOX</option>
                 </select>
               </div>
               <br><div class="box">
@@ -81,16 +81,21 @@
             <div class="panel panel2" id="panel3">
               <div class="welcome_message">
                 <label id="login_message">You are not logged in</label>
+              </div><br><br>
+              <div id="wishlist">
               </div>
               <br>
             </div>
           </div>
-          <div id="dialog" title="Login">
+          <div id="dialog" title="Login" >
             <label>Enter username</label>
             <input id="username_input"/><br>
             <label>Enter password</label>
             <input id="password_input"type="password" /><br>
             <button type="button" name="button" id="login-btn">login</button>
+          </div>
+          <div id="description" title="Info">
+
           </div>
           <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 
@@ -98,7 +103,7 @@
       <script type="text/javascript">
       var name, platform, type, price, year, yearOption;
       var isLoggedIn = false;
-      var user, userID = "", record=[];
+      var user, userID = "", username="", password="", record = [], record2 = [];
       $(document).ready(function(){
           $("#search-btn").click(function(){
                 getValue();
@@ -113,8 +118,11 @@
           autoOpen: false,
        });
 
+       $("#description").dialog({
+         autoOpen: false,
+       });
+
       function validValue() {
-        return true //debug
           if (price == parseInt(price, 10) && year == parseInt(year, 10))
             return true;
           else
@@ -131,6 +139,7 @@
       }
 
       function sendData() {
+          $("#panel2").html("");
         $.ajax({
           type: 'POST',
           url: 'index.php',
@@ -149,21 +158,39 @@
       }
 
       function renderHTML(response) {
-
         var html="";
         var data = JSON.parse(response);
         for (var i = 0; i < data.length; i++) {
           var row = data[i];
           record[i] = data[i];
-          html = html + "<div class=\"items\" id=" + i +"><label id=\"name_label\">" + row.name + "</label><br><br><br>"+
-          "<button class=\"more-btn\">add to wishlist</button><div class=\"rate\"><lebel id=\"rating\">" + row.rated + "</lebel></div><br></div>";
+          html = html + "<div class=\"items\" id=" + i +"><label id=\"name_label\">" + row.gName + "</label><br><label id=\"p_label\">" + row.plName + "<br>"+
+          "<button class=\"more-btn\" id =" + i + ">add to wishlist</button><div class=\"rate\"><lebel id=\"rating\">" + row.rated + "</lebel></div><br></div>";
         }
         $("#panel2").html(html);
       }
 
       $(document).on('click','.items',function(){
         var item = record[this.id];
-        alert(item.name);
+        var html = item.gName + "<br><br>" + item.description + "<br><br>" + item.plName + "<br><br>" + item.puName;
+        $("#description").html(html);
+        $("#description").dialog("open");
+
+      });
+
+      $(document).on('click','.more-btn',function(){
+        var item = record[this.id];
+        if (user!= null) {
+          $.ajax({
+            type: 'POST',
+            url: 'addWishlist.php',
+            data: { 'userID': user.uID, 'gameID': item.gID },
+            success: function(response) {
+              loginOp();
+            }
+          });
+        } else {
+          alert('Please Login');
+        }
 
       });
 
@@ -171,7 +198,10 @@
         if (isLoggedIn) {
           user = null;
           userID="";
+          password="";
+          username="";
           isLoggedIn = false;
+          $("#wishlist").html("");
           $("#login_message").text("You are not logged in");
           $("#login").html("Login");
         } else {
@@ -180,15 +210,17 @@
         }
       });
 
+      $('#dialog').dialog({ autoOpen: false });
+
 
       $("#login-btn").click(function() {
-            var username = $("#username_input").val();
-            var password = $("#password_input").val();
-            loginOp(username, password);
+             username = $("#username_input").val();
+             password = $("#password_input").val();
+            loginOp();
             $("#dialog").dialog( "close" );
       })
 
-      function loginOp(username, password) {
+      function loginOp() {
           isLoggedIn = true;
 
           $.ajax({
@@ -196,7 +228,6 @@
             url: 'login.php',
             data: { 'susername': username, 'spassword': password },
             success: function(response) {
-              console.log('success2');
               if (response != "[]")
                 renderUserInfo(response);
               else
@@ -206,12 +237,40 @@
           });
       }
 
+      $(document).on('click','.remove',function(){
+        var item = record2[this.id];
+        $.ajax({
+          type: 'POST',
+          url: 'removeWishlist.php',
+          data: { 'gameName': item.gName },
+          success: function(response) {
+            if (response != "[]") {
+              loginOp();
+            }
+          }
+        });
+      });
+
       function renderUserInfo(response) {
           $("#login").html("Logout");
           var data = JSON.parse(response);
           user = data[0];
           userID = user.userID;
           $("#login_message").text("Welcome " + user.username);
+          renderWishlist(data);
+      }
+
+      function renderWishlist(data) {
+        var html ="";
+        $("#wishlist").html(html);
+        for(var i = 0; i < data.length; i++) {
+          var row = data[i];
+          record2[i] = data[i];
+          if (row.gName != null) {
+            html = html + "<div class=\"wDiv\"><label id=\"gameName\"> " + row.gName + "</label><button class=\"remove\" id=" + i + ">Remove</button></div> <br>"
+            $("#wishlist").html(html);
+          }
+        }
       }
       </script>
   </body>

@@ -14,7 +14,24 @@ if(!empty($_POST)) {
   $price = $result['sprice'];
   $year = $result['syear'];
   $yearOption = $result['syearOption'];
-  $query = "SELECT * FROM Game WHERE rated like \"18%\"";
+
+    if ($yearOption == 'Before') {
+    $query = "SELECT Game.gameID as gID, Game.name as gName, rated, description, Platform.name as plName, Publisher.name as puName, price
+    FROM Game, Type, Publisher, Playable, Platform, Classifiable WHERE Game.gameID = Playable.gameID and Playable.platformID = Platform.platformID
+    and Game.publisherID = Publisher.publisherID and Game.gameID = Classifiable.gameID and Classifiable.typeID = Type.typeID and Game.name like '%$name%'and Platform.name = '$platform'
+    and Type.name = '$type'and price < '$price' and releaseYear < '$year'";
+  } else if ($yearOption == 'Since'){
+    $query = "SELECT  Game.gameID as gID, Game.name as gName, rated, description, Platform.name as plName, Publisher.name as puName, price
+    FROM Game, Type, Publisher, Playable, Platform, Classifiable WHERE Game.gameID = Playable.gameID and Playable.platformID = Platform.platformID
+    and Game.publisherID = Publisher.publisherID and Game.gameID = Classifiable.gameID and Classifiable.typeID = Type.typeID and Game.name like '%$name%'and Platform.name = '$platform'
+    and Type.name = '$type'and price < '$price' and releaseYear > '$year'";
+  } else {
+    $query = "SELECT  Game.gameID as gID, Game.name as gName, rated, description, Platform.name as plName, Publisher.name as puName, price
+    FROM Game, Type, Publisher, Playable, Platform, Classifiable WHERE Game.gameID = Playable.gameID and Playable.platformID = Platform.platformID
+    and Game.publisherID = Publisher.publisherID and Game.gameID = Classifiable.gameID and Classifiable.typeID = Type.typeID and Game.name like '%$name%'and Platform.name = '$platform'
+    and Type.name = '$type'and price < '$price' and releaseYear = '$year'";
+  }
+
   $answer = mysqli_query($db, $query);
   $table = array();
   while ($row = mysqli_fetch_assoc($answer)) {

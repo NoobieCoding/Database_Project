@@ -90,7 +90,6 @@ body {
 
 .welcome_message {
   background-color: rgb(0, 240, 168);
-  height 50px;;
   height: 25px;
   margin-top: 30px;
   border-color: green;
@@ -107,6 +106,17 @@ body {
 
 }
 
+.wDiv {
+  background-color: rgb(0, 240, 168);
+  height: 30px;
+  margin-top: 20px;
+  margin-bottom:  20px;
+}
+
+.remove {
+  margin-left: 20px;
+}
+
 #name_label {
   font-size: 30px;
 }
@@ -120,4 +130,8 @@ body {
 
 #rating {
   font-size: 32px;
+}
+
+#gameName {
+  margin-bottom: 10px;
 }

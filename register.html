@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Registration</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script>
+  function regis() {
+    var usrForm = document.getElementById("usr")
+    var pwd1Form = document.getElementById("pwd1");
+    var pwd2Form = document.getElementById("pwd2");
+    var usr = usrForm.value;
+    var pwd1 = pwd1Form.value;
+    var pwd2 = pwd2Form.value;
+
+    if (usr=='' || pwd1=='' || pwd2=='') {
+      alert('Please form all information we need!');
+    } else if (pwd1==pwd2) {
+      $.ajax({
+        type: 'POST',
+        url: 'regis.php',
+        data: { 'username': usr, 'password': pwd1 },
+        success: function(response) {
+          if (response != "[]") {
+            alert('Success');
+            document.location.href = "index.html";
+          }
+        }
+      });
+    } else {
+      alert('Error! Incorrect password confirmation.')
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <div align="center">
+    <br><br><b>REGISTRATION</b><br><br><br>
+    USERNAME<br> <input type="text" name="usr" id="usr"><br><br><br>
+    PASSWORD<br> <input type="password" name="pwd1" id="pwd1"><br><br>
+    PASSWORD CONFIRM<br> <input type="password" name="pwd2" id="pwd2"><br><br><br>
+    <button onclick="regis()">SUBMIT</button>
+  </div>
+</body>
